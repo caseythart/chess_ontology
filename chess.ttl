@@ -1,0 +1,82 @@
+@prefix : <https://www.caseys_dense_ontology.com/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix skosxl: <http://www.w3.org/2008/05/skos-xl#> .@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix skosxl: <http://www.w3.org/2008/05/skos-xl#> .
+
+<https://www.caseys_dense_ontology.com/> a owl:Ontology;
+	rdfs:commment "This is a chess ontology for personal and YouTube development purposes." ;
+.
+
+#################################################################
+#    Classes
+#################################################################
+:ChessPlayer a owl:Class ; 
+	rdfs:label "chess player"^^xsd:string ;
+        skos:prefLabel "chess player"@en ;
+	rdfs:subClassOf :Person ;
+	rdfs:equivalentClass [a owl:Restriction ;
+			      owl:onProperty :hasAmount ;
+			      owl:someValuesFrom :ChessRating ;] ;
+	rdfs:comment """:ChessPlayer is the class of all persons who play chess. Typically they will have a rating of some sort, either FIDE (see :FIDERating) or for a chess league/website (e.g. chess.com)."""^^xsd:string ;
+        :exampleSubclass :ChessPlayer-Professional ;
+        :exampleInstance :MagnusCarlsen, :CaseyHart, :IanNepomniatchi, :FabianoCaruana, :HikaruNakamura ;
+.
+
+
+#################################################################
+#    Properties
+#################################################################
+
+
+#################################################################
+#    		Object Properties
+#################################################################
+
+
+#################################################################
+#    		Datatype Properties
+#################################################################
+
+
+#################################################################
+#    		Annotation Properties
+#################################################################
+
+
+#################################################################
+#    Individuals
+#################################################################
+:MagnusCarlsen a :ChessPlayer ;
+	       :hasAmount [a :FIDERating ;
+	       		   :decimalValue "2839"^^xsd:integer ;
+			   :measuredOn "2025-09-01"^^xsd:date ;] ;
+.
+
+#################################################################
+#    Example Data
+#################################################################
+
+:MagnusCarlsen a :ChessPlayer ;
+	       :hasFIDERating [:decimalValue "2839"^^xsd:integer ; :measuredOn "2025-09-01"^^xsd:date] ;	 ### < better
+	       :birthDate :Norway ;
+	       :birthDate [:universalDate "1990-11-30"^^xsd:date ] ;
+.
+
+:Chess a :Game ;
+.
+
+:Rook rdfs:subClassOf :ChessPiece ;
+.
+
+:ImmortalGame a :ChessGame ;
+.
