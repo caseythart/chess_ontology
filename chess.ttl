@@ -5,12 +5,6 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
-@prefix skosxl: <http://www.w3.org/2008/05/skos-xl#> .@prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix xml: <http://www.w3.org/XML/1998/namespace> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix skosxl: <http://www.w3.org/2008/05/skos-xl#> .
 
 <https://www.caseys_dense_ontology.com/> a owl:Ontology;
@@ -32,6 +26,80 @@
         :exampleInstance :MagnusCarlsen, :CaseyHart, :IanNepomniatchi, :FabianoCaruana, :HikaruNakamura ;
 .
 
+:ChessPiece a owl:Class ;
+	rdfs:label "chess piece"^^xsd:string ;
+        skos:prefLabel "chess piece"@en ;
+	rdfs:subClassOf :PhysicalArtifact ;
+	rdfs:comment """:ChessPiece is the class of all physical artifacts that are pieces intended to be used in games of chess."""^^xsd:string ;
+        :exampleSubclass :Rook, :Pawn ;
+.
+
+:Rook a owl:Class ;
+	rdfs:label "rook"^^xsd:string ;
+        skos:prefLabel "rook"@en ;
+	rdfs:subClassOf :ChessPiece , [a owl:Restriction ;
+				       owl:onProperty :hasMaterialValueOfChessPiece ;
+				       owl:hasValue "5"^^xsd:integer ;] ;
+	rdfs:comment """:Rook is the class of all chess pieces that look like castles (or are derived from that origin); they can move in straight lines until they collide with another chess piece. They can capture the first enemy piece they would run into."""^^xsd:string ;
+.
+
+:Bishop a owl:Class ;
+	rdfs:label "bishop"^^xsd:string ;
+        skos:prefLabel "bishop"@en ;
+	rdfs:subClassOf :ChessPiece , [a owl:Restriction ;
+				       owl:onProperty :hasMaterialValueOfChessPiece ;
+				       owl:hasValue "3"^^xsd:integer ;] ;
+	rdfs:comment """:Bishop is the class of all chess pieces that can move only on diagonals."""^^xsd:string ;
+	:exampleSubclass :Bishop-LightSquare, :Bishop-DarkSquare ;
+.
+
+:Bishop-LightSquare a owl:Class ;
+	rdfs:label "lightsquare bishop"^^xsd:string ;
+        skos:prefLabel "lightsquare bishop"@en ;
+	rdfs:subClassOf :Bishop ;
+.
+
+:Bishop-DarkSquare a owl:Class ;
+	rdfs:label "darksquare bishop"^^xsd:string ;
+        skos:prefLabel "darksquare bishop"@en ;
+	rdfs:subClassOf :Bishop ;
+.
+
+:Knight a owl:Class ;
+	rdfs:label "knight"^^xsd:string ;
+        skos:prefLabel "knight"@en ;
+	rdfs:subClassOf :ChessPiece , [a owl:Restriction ;
+				       owl:onProperty :hasMaterialValueOfChessPiece ;
+				       owl:hasValue "3"^^xsd:integer ;] ;
+	rdfs:comment """:Knight is the class of all chess pieces that move in an 'l' shape."""^^xsd:string ;
+.
+
+:Queen a owl:Class ;
+	rdfs:label "queen"^^xsd:string ;
+        skos:prefLabel "queen"@en ;
+	rdfs:subClassOf :ChessPiece , [a owl:Restriction ;
+				       owl:onProperty :hasMaterialValueOfChessPiece ;
+				       owl:hasValue "9"^^xsd:integer ;] ;
+	rdfs:comment """:Queen is the class of all chess pieces that move on the diagonal or straight line, as far as they can go before hitting another piece or the edge of the board."""^^xsd:string ;
+.
+
+:King a owl:Class ;
+	rdfs:label "king"^^xsd:string ;
+        skos:prefLabel "king"@en ;
+	rdfs:subClassOf :ChessPiece ;
+	rdfs:comment """:King is the class of all chess pieces that can move one square in any direction. If they are captured, the game is over."""^^xsd:string ;
+.
+
+:Pawn a owl:Class ;
+	rdfs:label "pawn"^^xsd:string ;
+        skos:prefLabel "pawn"@en ;
+	rdfs:subClassOf :ChessPiece , [a owl:Restriction ;
+				       owl:onProperty :hasMaterialValueOfChessPiece ;
+				       owl:hasValue "1"^^xsd:integer ;] ;
+	rdfs:comment """:Pawn is the class of all chess pieces that can move one or two squares forward (two only on their first move). They capture diagonally. They can be promoted to another piece (usually a queen)."""^^xsd:string ;
+        :exampleSubclass :Pawn-Queen, :Pawn-King, :Pawn-A ;
+.
+
 
 #################################################################
 #    Properties
@@ -46,7 +114,14 @@
 #################################################################
 #    		Datatype Properties
 #################################################################
-
+:materialValueOfChessPiece a owl:DatatypeProperty ;
+	rdfs:label "material value of chess piece"^^xsd:string ;
+        skos:prefLabel "has a material value of"@en ;
+	rdfs:domain :ChessPiece ;
+        rdfs:range xsd:integer ;
+	rdfs:comment """(:ChessPiece1 :materialValueOfChessPiece \"INTEGER\"xsd:integer) means that ChessPiece1 has a material value of INTEGER. For example, (:Rook01 :materialValueOfChessPiece \"5\"^^xsd:integer)."""^^xsd:string ;
+        :exampleTriple ":Rook01 :materialValueOfChessPiece \"5\"^^xsd:integer"^^xsd:string ;
+.
 
 #################################################################
 #    		Annotation Properties
@@ -62,15 +137,17 @@
 			   :measuredOn "2025-09-01"^^xsd:date ;] ;
 .
 
+:Chess a :Game ;
+	rdfs:label "chess"^^xsd:string ;
+        skos:prefLabel "chess"@en ;
+	rdfs:comment """:Chess is an instance of :Game."""^^xsd:string ;
+.
+
+
+
 #################################################################
 #    Example Data
 #################################################################
-
-:MagnusCarlsen a :ChessPlayer ;
-	       :hasFIDERating [:decimalValue "2839"^^xsd:integer ; :measuredOn "2025-09-01"^^xsd:date] ;	 ### < better
-	       :birthDate :Norway ;
-	       :birthDate [:universalDate "1990-11-30"^^xsd:date ] ;
-.
 
 :Chess a :Game ;
 .
@@ -80,3 +157,9 @@
 
 :ImmortalGame a :ChessGame ;
 .
+
+## notes
+## Moving a Piece
+## Capturing a Piece
+## Checking a King
+## Checkmating an Opponent
