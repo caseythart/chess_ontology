@@ -14,33 +14,20 @@
 #################################################################
 #    Classes
 #################################################################
-:ChessPlayer a owl:Class ; 
-	rdfs:label "chess player"^^xsd:string ;
-        skos:prefLabel "chess player"@en ;
-	rdfs:subClassOf :Person ;
-	rdfs:equivalentClass [a owl:Restriction ;
-			      owl:onProperty :hasAmount ;
-			      owl:someValuesFrom :ChessRating ;] ;
-	rdfs:comment """:ChessPlayer is the class of all persons who play chess. Typically they will have a rating of some sort, either FIDE (see :FIDERating) or for a chess league/website (e.g. chess.com)."""^^xsd:string ;
-        :exampleSubclass :ChessPlayer-Professional ;
-        :exampleInstance :MagnusCarlsen, :CaseyHart, :IanNepomniatchi, :FabianoCaruana, :HikaruNakamura ;
+:BoardState a owl:Class ;
+	rdfs:label "board state"^^xsd:string ;
+        skos:prefLabel "board state"@en ;
+	rdfs:subClassOf :StaticSituation ;
+	rdfs:comment """:BoardState is the class of all possible configurations of chess pieces on the chess board."""^^xsd:string ;
+        :exampleSubclass "";
+        :exampleInstance "";
 .
 
-:ChessPiece a owl:Class ;
-	rdfs:label "chess piece"^^xsd:string ;
-        skos:prefLabel "chess piece"@en ;
-	rdfs:subClassOf :PhysicalArtifact ;
-	rdfs:comment """:ChessPiece is the class of all physical artifacts that are pieces intended to be used in games of chess."""^^xsd:string ;
-        :exampleSubclass :Rook, :Pawn ;
-.
-
-:Rook a owl:Class ;
-	rdfs:label "rook"^^xsd:string ;
-        skos:prefLabel "rook"@en ;
-	rdfs:subClassOf :ChessPiece , [a owl:Restriction ;
-				       owl:onProperty :hasMaterialValueOfChessPiece ;
-				       owl:hasValue "5"^^xsd:integer ;] ;
-	rdfs:comment """:Rook is the class of all chess pieces that look like castles (or are derived from that origin); they can move in straight lines until they collide with another chess piece. They can capture the first enemy piece they would run into."""^^xsd:string ;
+:BoardState-Initial a owl:Class ;
+	rdfs:label "initial boardstate"^^xsd:string ;
+        skos:prefLabel "initial boardstate"@en ;
+	rdfs:subClassOf :BoardState ;
+	rdfs:comment "This is the initial position for every (traditional) game of chess. That is, pawns on the 2nd and 7th rank, and other pieces assorted as usual." ;
 .
 
 :Bishop a owl:Class ;
@@ -65,22 +52,47 @@
 	rdfs:subClassOf :Bishop ;
 .
 
-:Knight a owl:Class ;
-	rdfs:label "knight"^^xsd:string ;
-        skos:prefLabel "knight"@en ;
-	rdfs:subClassOf :ChessPiece , [a owl:Restriction ;
-				       owl:onProperty :hasMaterialValueOfChessPiece ;
-				       owl:hasValue "3"^^xsd:integer ;] ;
-	rdfs:comment """:Knight is the class of all chess pieces that move in an 'l' shape."""^^xsd:string ;
+:ChessGame a owl:Class ;
+	rdfs:label "chess game"^^xsd:string ;
+        skos:prefLabel "chess game"@en ;
+	rdfs:subClassOf :Event ;
+	owl:equivalentClass [owl:intersectionOf (:Event [a owl:Restriction ;
+			    			         owl:onProperty :governedBy ;   ### Think about this TODO
+			     				 owl:hasValue :Chess ;] ;) ;
+	rdfs:comment """:Chess is the class of all games played according to the rules of chess."""^^xsd:string ;
+        :exampleSubclass "";
+        :exampleInstance "The Immortal Game" ;
 .
 
-:Queen a owl:Class ;
-	rdfs:label "queen"^^xsd:string ;
-        skos:prefLabel "queen"@en ;
-	rdfs:subClassOf :ChessPiece , [a owl:Restriction ;
-				       owl:onProperty :hasMaterialValueOfChessPiece ;
-				       owl:hasValue "9"^^xsd:integer ;] ;
-	rdfs:comment """:Queen is the class of all chess pieces that move on the diagonal or straight line, as far as they can go before hitting another piece or the edge of the board."""^^xsd:string ;
+:ChessOpening a owl:Class ;
+	rdfs:label "chess opening"^^xsd:string ;
+        skos:prefLabel "chess opening"@en ;
+	rdfs:subClassOf :Event , [a owl:Restriction ;
+			       	  owl:onProperty [owl:inverseOf :hasSubevent-First] ;  ### Create this TODO
+				  owl:someValuesFrom :ChessGame ] ;
+	rdfs:comment """:ChessOpening is the class of all events in which some sequence of moves starts off a chess game."""^^xsd:string ;
+        :exampleSubclass "";
+        :exampleInstance "";
+.
+
+:ChessPlayer a owl:Class ; 
+	rdfs:label "chess player"^^xsd:string ;
+        skos:prefLabel "chess player"@en ;
+	rdfs:subClassOf :Person ;
+	rdfs:equivalentClass [a owl:Restriction ;
+			      owl:onProperty :hasAmount ;
+			      owl:someValuesFrom :ChessRating ;] ;
+	rdfs:comment """:ChessPlayer is the class of all persons who play chess. Typically they will have a rating of some sort, either FIDE (see :FIDERating) or for a chess league/website (e.g. chess.com)."""^^xsd:string ;
+        :exampleSubclass :ChessPlayer-Professional ;
+        :exampleInstance :MagnusCarlsen, :CaseyHart, :IanNepomniatchi, :FabianoCaruana, :HikaruNakamura ;
+.
+
+:ChessPiece a owl:Class ;
+	rdfs:label "chess piece"^^xsd:string ;
+        skos:prefLabel "chess piece"@en ;
+	rdfs:subClassOf :PhysicalArtifact ;
+	rdfs:comment """:ChessPiece is the class of all physical artifacts that are pieces intended to be used in games of chess."""^^xsd:string ;
+        :exampleSubclass :Rook, :Pawn ;
 .
 
 :King a owl:Class ;
@@ -88,6 +100,15 @@
         skos:prefLabel "king"@en ;
 	rdfs:subClassOf :ChessPiece ;
 	rdfs:comment """:King is the class of all chess pieces that can move one square in any direction. If they are captured, the game is over."""^^xsd:string ;
+.
+
+:Knight a owl:Class ;
+	rdfs:label "knight"^^xsd:string ;
+        skos:prefLabel "knight"@en ;
+	rdfs:subClassOf :ChessPiece , [a owl:Restriction ;
+				       owl:onProperty :hasMaterialValueOfChessPiece ;
+				       owl:hasValue "3"^^xsd:integer ;] ;
+	rdfs:comment """:Knight is the class of all chess pieces that move in an 'l' shape."""^^xsd:string ;
 .
 
 :Pawn a owl:Class ;
@@ -100,6 +121,32 @@
         :exampleSubclass :Pawn-Queen, :Pawn-King, :Pawn-A ;
 .
 
+:Queen a owl:Class ;
+	rdfs:label "queen"^^xsd:string ;
+        skos:prefLabel "queen"@en ;
+	rdfs:subClassOf :ChessPiece , [a owl:Restriction ;
+				       owl:onProperty :hasMaterialValueOfChessPiece ;
+				       owl:hasValue "9"^^xsd:integer ;] ;
+	rdfs:comment """:Queen is the class of all chess pieces that move on the diagonal or straight line, as far as they can go before hitting another piece or the edge of the board."""^^xsd:string ;
+.
+
+:QueensGambit a owl:Class ;
+	rdfs:label "queens gambit"^^xsd:string ;
+        skos:prefLabel "queen's gambit"@en ;
+	rdfs:subClassOf :ChessOpening ;
+	rdfs:comment """:QueensGambit is the class of all chess openings that start with the sequence 1.d4 d5 2.c4."""^^xsd:string ;
+        :exampleSubclass "";
+        :exampleInstance "";
+.
+
+:Rook a owl:Class ;
+	rdfs:label "rook"^^xsd:string ;
+        skos:prefLabel "rook"@en ;
+	rdfs:subClassOf :ChessPiece , [a owl:Restriction ;
+				       owl:onProperty :hasMaterialValueOfChessPiece ;
+				       owl:hasValue "5"^^xsd:integer ;] ;
+	rdfs:comment """:Rook is the class of all chess pieces that look like castles (or are derived from that origin); they can move in straight lines until they collide with another chess piece. They can capture the first enemy piece they would run into."""^^xsd:string ;
+.
 
 #################################################################
 #    Properties
@@ -121,6 +168,15 @@
         rdfs:range xsd:integer ;
 	rdfs:comment """(:ChessPiece1 :materialValueOfChessPiece \"INTEGER\"xsd:integer) means that ChessPiece1 has a material value of INTEGER. For example, (:Rook01 :materialValueOfChessPiece \"5\"^^xsd:integer)."""^^xsd:string ;
         :exampleTriple ":Rook01 :materialValueOfChessPiece \"5\"^^xsd:integer"^^xsd:string ;
+.
+
+:moveOrder a owl:DatatypeProperty ;
+	rdfs:label "move order"^^xsd:string ;
+        skos:prefLabel ""@en ;
+	rdfs:domain :ChessGame ; ## Rework (see below)
+        rdfs:range xsd:string ;
+	rdfs:comment """(:BoardState1 :moveOrder \"STRING\"xsd:string) means that BoardState1 results from the move sequence given by STRING. For example, (:QueensGambitAcepted :moveOrder \"1.d4 d5 2.c4 dxc4\"^^xsd:string)."""^^xsd:string ;
+        :exampleTriple ":QueensGambitAcepted :moveOrder \"1.d4 d5 2.c4 dxc4\"^^xsd:string"^^xsd:string ;
 .
 
 #################################################################
@@ -159,6 +215,8 @@
 .
 
 ## notes
+## Queen's Gambit is a chess opening that is associated with a certain board state.
+### NEXT TIME: 1. ChessMove a class. MoveSequence a Class. moveOrder a functional Property specifying a move sequence. 2.
 ## Moving a Piece
 ## Capturing a Piece
 ## Checking a King
