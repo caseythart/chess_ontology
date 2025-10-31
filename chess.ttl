@@ -7,8 +7,7 @@
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix skosxl: <http://www.w3.org/2008/05/skos-xl#> .
 
-<https://www.caseys_dense_ontology.com/> a owl:Ontology;
-	rdfs:commment "This is a chess ontology for personal and YouTube development purposes." ;
+:chess a owl:Ontology ;
 .
 
 #################################################################
@@ -58,7 +57,7 @@
 	rdfs:subClassOf :Event ;
 	owl:equivalentClass [owl:intersectionOf (:Event [a owl:Restriction ;
 			    			         owl:onProperty :governedBy ;   ### Think about this TODO
-			     				 owl:hasValue :Chess ;] ;) ;
+			     				 owl:hasValue :Chess ;] )] ;
 	rdfs:comment """:Chess is the class of all games played according to the rules of chess."""^^xsd:string ;
         :exampleSubclass "";
         :exampleInstance "The Immortal Game" ;
@@ -133,11 +132,22 @@
 :QueensGambit a owl:Class ;
 	rdfs:label "queens gambit"^^xsd:string ;
         skos:prefLabel "queen's gambit"@en ;
-	rdfs:subClassOf :ChessOpening ;
+	rdfs:subClassOf :ChessOpening, [a owl:Restriction ;
+				       	owl:onProperty :moveOrder;
+					owl:hasValue "1.d4 d5 2.c4"] ;
 	rdfs:comment """:QueensGambit is the class of all chess openings that start with the sequence 1.d4 d5 2.c4."""^^xsd:string ;
         :exampleSubclass "";
         :exampleInstance "";
 .
+
+:QueensGambitAccepted a owl:Class ;
+		      rdfs:label "queens gambit accepted" ;
+		      skos:prefLabel "queen's gambit accepted"@en ;
+		      rdfs:subClassOf :QueensGambit, [a owl:Restriction ;
+				       	owl:onProperty :moveOrder;
+					owl:hasValue "1.d4 d5 2.c4 dxc4"] ;
+		      rdfs:comment """:QueensGambitAccepted are Queen's gambits where black takes the offered pawn on c4.""" ;
+.		      
 
 :Rook a owl:Class ;
 	rdfs:label "rook"^^xsd:string ;
@@ -146,6 +156,13 @@
 				       owl:onProperty :hasMaterialValueOfChessPiece ;
 				       owl:hasValue "5"^^xsd:integer ;] ;
 	rdfs:comment """:Rook is the class of all chess pieces that look like castles (or are derived from that origin); they can move in straight lines until they collide with another chess piece. They can capture the first enemy piece they would run into."""^^xsd:string ;
+.
+
+:FIDERating a owl:Class ;
+	rdfs:label "FIDE rating"^^xsd:string ;
+        skos:prefLabel "FIDE rating"@en ;
+	rdfs:subClassOf :Rating ;
+	rdfs:comment """:FIDERating is the class of all ratings that are given by FIDE, the international chess federation, that score a person's chess skills and are used to calculate win probabilities."""^^xsd:string ;
 .
 
 #################################################################
@@ -172,11 +189,11 @@
 
 :moveOrder a owl:DatatypeProperty ;
 	rdfs:label "move order"^^xsd:string ;
-        skos:prefLabel ""@en ;
-	rdfs:domain :ChessGame ; ## Rework (see below)
+        skos:prefLabel "includes the move sequence"@en ;
+	rdfs:domain :ChessEvent ; ## Rework (see below)
         rdfs:range xsd:string ;
-	rdfs:comment """(:BoardState1 :moveOrder \"STRING\"xsd:string) means that BoardState1 results from the move sequence given by STRING. For example, (:QueensGambitAcepted :moveOrder \"1.d4 d5 2.c4 dxc4\"^^xsd:string)."""^^xsd:string ;
-        :exampleTriple ":QueensGambitAcepted :moveOrder \"1.d4 d5 2.c4 dxc4\"^^xsd:string"^^xsd:string ;
+	rdfs:comment """(:ChessEvent01 :moveOrder \"STRING\"xsd:string) means that :ChessEvent01 partly consists in the move sequence given by STRING. For example, (:QueensGambitAcepted04 :moveOrder \"1.d4 d5 2.c4 dxc4\"^^xsd:string)."""^^xsd:string ;
+        :exampleTriple ":QueensGambitAcepted04 :moveOrder \"1.d4 d5 2.c4 dxc4\"^^xsd:string"^^xsd:string ;
 .
 
 #################################################################
@@ -191,6 +208,11 @@
 	       :hasAmount [a :FIDERating ;
 	       		   :decimalValue "2839"^^xsd:integer ;
 			   :measuredOn "2025-09-01"^^xsd:date ;] ;
+.
+
+:DanielNaroditsky a :ChessPlayer ;
+		  :hasAmount [a :FIDERating ;
+		  	     :decimalValue "2619"^^xsd:integer ;] ;			  
 .
 
 :Chess a :Game ;
@@ -215,8 +237,7 @@
 .
 
 ## notes
-## Queen's Gambit is a chess opening that is associated with a certain board state.
-### NEXT TIME: 1. ChessMove a class. MoveSequence a Class. moveOrder a functional Property specifying a move sequence. 2.
+## NEXT: Get a database/table/structured data of chess openings. Show an ETL to get that data into the ontology.
 ## Moving a Piece
 ## Capturing a Piece
 ## Checking a King
